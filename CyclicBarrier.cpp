@@ -124,7 +124,6 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 
 	if(timeOutNeeded && this->m_count != m_parties)
 	{
-		std::cout << "I am here trying to break the barrier" << std::endl;
 		breakBarrier();
 		throw TimeOutException();
 	}
