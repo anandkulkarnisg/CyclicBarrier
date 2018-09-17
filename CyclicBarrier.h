@@ -7,6 +7,7 @@
 #include<memory>
 
 #include "CyclicBarrierExceptions.h"
+#include "TimeUtils.h"
 
 #ifndef CyclicBarrier_H
 #define CyclicBarrier_H
@@ -22,7 +23,7 @@ class CyclicBarrier
 		void resetGeneration();					// This resets the barrier to broken set to false which holding lock.
 		void nextGeneration();					// This creates the next cycle/generation of the Barrier upon successfull completion or upon reset.
 		void breakBarrier();					// This is used to break the barrier and wakeup or signal everyone.
-		unsigned int dowait(const bool&, const long&);	// This returns the arrival index upon succes else throws exception due to BarrierBroken or TimeOut. 
+		unsigned int dowait(const bool&, const long&, const TimeUnit&);	// This returns the arrival index upon succes else throws exception due to BarrierBroken or TimeOut. 
 		std::unique_ptr<Poco::Runnable> m_runnableItem;	// This adopts and manages the Poco Runnable item passed to the constructor.
 		bool m_isRunnableItem = false;			// This is set to indicate if the runnable is passed to the Barrier.
 
@@ -31,7 +32,7 @@ class CyclicBarrier
 		CyclicBarrier(const unsigned int&, Poco::Runnable* runItem);	// Constructor with parameters and runnable item.
 		unsigned int getParties();				// This returns the number of parties required to trip this barrier.
 		unsigned int await();					// This is await feature with blocking until either broken or successfull.
-		unsigned int await(const long&);		// Ths is  await with time out feature. It either returns suceessfull or breaks the barrier upon timeout.
+		unsigned int await(const long&, const TimeUnit& = TimeUnit::MilliSeconds);		// Ths is  await with time out feature. It either returns suceessfull or breaks the barrier upon timeout.
 		bool isBroken();						// Get the status of the Barrier. This must be done with Lock.	
 		void reset();							// This resets the Barrier to clean initial state after being broken.
 		unsigned int getNumberWaiting();		// This returns the number of parties that are currently waiting at the barrier. Done with a Lock.

@@ -81,7 +81,7 @@ void CyclicBarrier::breakBarrier()
 } 
 
 // Now Implement the most critical method. Internal private dowait. It covers both the await and await with timeout interface calls. 
-unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTimeMilliSecs)
+unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTime, const TimeUnit& unit)
 {
 	// First take an exclusive Lock.
 	unique_lock<mutex> exclusiveLock(m_mutex);
@@ -116,7 +116,7 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 	if(!timeOutNeeded)
 		m_cond.wait(exclusiveLock, [&]() { return(this->m_count == m_parties || this->m_broken == true); });
 	else
-		m_cond.wait_for(exclusiveLock, std::chrono::milliseconds(waitTimeMilliSecs), [&]() { return(this->m_count == m_parties || this->m_broken == true); });
+		m_cond.wait_for(exclusiveLock, TimeUtils::waitDuration(waitTime, unit), [&]() { return(this->m_count == m_parties || this->m_broken == true); });
 
 	// We have come here means the condition variable has been signalled and condition met. Let us check various possibilities here.
 	if(isBroken())
@@ -134,13 +134,13 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 // Now implement the await feature. This waits and blocks indefinitely unless one of other threads times out and breaks the barrier or sufficient threads end up tripping the barrier.
 unsigned int CyclicBarrier::await()
 {
-	return(dowait(false,0));
+	return(dowait(false,0, TimeUnit::MilliSeconds));
 }
 
 // Now implement the await with timeout feature. This times out and breaks the barrier if sufficient participant threads do not arrive in time.
-unsigned int CyclicBarrier::await(const long& waitTimeInMilliSecs)
+unsigned int CyclicBarrier::await(const long& waitTimeInMilliSecs, const TimeUnit& unit)
 {
-	return(dowait(true, waitTimeInMilliSecs));
+	return(dowait(true, waitTimeInMilliSecs, unit));
 }
 
 // Implement the default destructor finally. 
