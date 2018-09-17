@@ -10,34 +10,22 @@ enum class TimeUnit { MilliSeconds , MicroSeconds , Seconds, NanoSeconds, Minute
 
 class TimeUtils
 {
-	private:
-		class TimeUnit_impl
-		{
-			public:
-				typedef std::chrono::duration<long, std::ratio<1l, 1000l> > MILLISECONDS;
-				typedef std::chrono::duration<long, std::ratio<1l, 1000000l> > MICROSECONDS;
-				typedef std::chrono::duration<long, std::ratio<1l, 1l> > SECONDS; 
-				typedef std::chrono::duration<long, std::ratio<1l, 1000000000l> > NANOSECONDS;
-				typedef std::chrono::duration<long, std::ratio<60> > MINUTES;
-				typedef std::chrono::duration<long, std::ratio<3600> > HOURS;
-		};
-
 	public:
 		static void customSleep(const long& quantity, const TimeUnit& unit)
 		{   
 			switch(unit)
 			{
-				case TimeUnit::MilliSeconds : std::this_thread::sleep_for(TimeUnit_impl::MILLISECONDS(quantity));
+				case TimeUnit::MilliSeconds : std::this_thread::sleep_for(std::chrono::milliseconds(quantity));
 											  break;
-				case TimeUnit::MicroSeconds : std::this_thread::sleep_for(TimeUnit_impl::MICROSECONDS(quantity));
+				case TimeUnit::MicroSeconds : std::this_thread::sleep_for(std::chrono::microseconds(quantity));
 											  break;
-				case TimeUnit::Seconds :      std::this_thread::sleep_for(TimeUnit_impl::SECONDS(quantity));
+				case TimeUnit::Seconds :      std::this_thread::sleep_for(std::chrono::seconds(quantity));
 											  break;
-				case TimeUnit::NanoSeconds :  std::this_thread::sleep_for(TimeUnit_impl::NANOSECONDS(quantity));
+				case TimeUnit::NanoSeconds :  std::this_thread::sleep_for(std::chrono::nanoseconds(quantity));
 											  break;
-				case TimeUnit::Minutes :      std::this_thread::sleep_for(TimeUnit_impl::MINUTES(quantity));
+				case TimeUnit::Minutes :      std::this_thread::sleep_for(std::chrono::minutes(quantity));
 											  break;
-				case TimeUnit::Hours :        std::this_thread::sleep_for(TimeUnit_impl::HOURS(quantity));
+				case TimeUnit::Hours :        std::this_thread::sleep_for(std::chrono::hours(quantity));
 											  break;
 				default:            std::cout << "unknown TimeUnit type. Please verify." << std::endl;
 									break;
@@ -47,7 +35,7 @@ class TimeUtils
 		static std::chrono::milliseconds waitDuration(const long& quantity, const TimeUnit& unit)
 		{
 			// This method converts any given quantity and TimeUnit type to corrosponding millisecond wait period. 
-			std::chrono::duration<long, std::ratio<1l, 1000l> > returnValue;
+			std::chrono::milliseconds returnValue;
 			switch(unit)
 			{
 				case TimeUnit::MilliSeconds : returnValue = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::milliseconds(quantity));
