@@ -16,7 +16,7 @@ void threadFunc(const bool& waitMode)
 	{
 		try
 		{	
-			localBarrierCount = barrier.await(0);
+			localBarrierCount = barrier.await(0, TimeUnit::MilliSeconds);
 		}
 		catch(const std::exception& e)
 		{
