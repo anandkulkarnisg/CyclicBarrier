@@ -10,17 +10,17 @@ CyclicBarrier barrier(2);
 
 void threadFunc(const bool& waitMode)
 {
-	int localBarrierCount;
+	int localBarrierCount=0;
 
 	if(waitMode)
 	{
 		try
 		{	
-			localBarrierCount = barrier.await(0, TimeUnit::MilliSeconds);
+			localBarrierCount = barrier.await(1000, TimeUnit::MicroSeconds);	// On the edge of 1000 micro seconds the barrier either can go broke waiting or work perfectly. This is the tolerence edge!!
 		}
 		catch(const std::exception& e)
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << localBarrierCount << e.what() << std::endl;
 		}
 	}
 	else
@@ -31,7 +31,7 @@ void threadFunc(const bool& waitMode)
 		}
 		catch(const std::exception& e)
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << localBarrierCount << e.what() << std::endl;
 		}
 	}
 }
