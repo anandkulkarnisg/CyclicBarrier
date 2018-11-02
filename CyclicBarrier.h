@@ -2,7 +2,7 @@
 #include<string>
 #include<chrono>
 #include<condition_variable>
-#include<mutex>
+#include<shared_mutex>
 #include<Poco/Runnable.h>
 #include<memory>
 
@@ -17,8 +17,8 @@ class CyclicBarrier
 	private:
 		bool m_broken = false;					// This is used to track the state of the Barrier. The only cases of Barrier being broken are If one of threads times out and breaks the Barrier due to time out.
 		unsigned int m_count;					// This maintains the count of the barrier participants.
-		std::mutex m_mutex;						// This is the mutex which holds allows the synchronization to happen.
-		std::condition_variable m_cond;			// This is the signalling condition variable to coordinate the threads on wait condition.
+		std::shared_mutex m_mutex;				// This is the mutex which holds allows the synchronization to happen.
+		std::condition_variable_any m_cond;		// This is the signalling condition variable to coordinate the threads on wait condition.
 		unsigned int m_parties;					// This is used to geenerate the next generation of the Barrier upon successfull finish and auto reset.
 		void resetGeneration();					// This resets the barrier to broken set to false which holding lock.
 		void nextGeneration();					// This creates the next cycle/generation of the Barrier upon successfull completion or upon reset.

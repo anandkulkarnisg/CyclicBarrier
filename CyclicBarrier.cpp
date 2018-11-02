@@ -29,6 +29,7 @@ CyclicBarrier::CyclicBarrier(const unsigned int& participantCount, Runnable* run
 // Implement the getParties. This does not require any lock. It returns the number of parties/participants required to trip this barrier.
 unsigned int CyclicBarrier::getParties()
 {
+	shared_lock<shared_mutex> readLock(m_mutex);
 	return(m_parties);
 }
 
@@ -37,7 +38,7 @@ unsigned int CyclicBarrier::getParties()
 
 bool CyclicBarrier::isBroken()
 {
-	//unique_lock<mutex> exclusiveLock(m_mutex);
+	shared_lock<shared_mutex> readLock(m_mutex);	
 	return(m_broken);
 }
 
@@ -45,7 +46,7 @@ bool CyclicBarrier::isBroken()
 // While running this it requires an exclusive lock as you want to ensure that no other thread starts/aims to use this barrier while reset is going on.
 void CyclicBarrier::reset()
 {
-	unique_lock<mutex> exclusiveLock(m_mutex);
+	unique_lock<shared_mutex> exclusiveLock(m_mutex);
 	breakBarrier();
 	nextGeneration();
 }
@@ -54,7 +55,7 @@ void CyclicBarrier::reset()
 // Naturally it requires lock to indicate the number so that it is as accurate as possible.
 unsigned int CyclicBarrier::getNumberWaiting()
 {
-	unique_lock<mutex> exclusiveLock(m_mutex);
+	shared_lock<shared_mutex> readLock(m_mutex);
 	return(m_parties - m_count);
 }
 
@@ -82,10 +83,10 @@ void CyclicBarrier::breakBarrier()
 unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTime, const TimeUnit& unit)
 {
 	// First take an exclusive Lock.
-	unique_lock<mutex> exclusiveLock(m_mutex);
+	unique_lock<shared_mutex> exclusiveLock(m_mutex);
 
 	// Check if the barrier is broken. If so throw and bow out.
-	if(isBroken())
+	if(m_broken)
 		throw BrokenBarrierException();
 
 	unsigned int returnIndex = --m_count;
@@ -122,7 +123,7 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 		m_cond.wait_for(exclusiveLock, TimeUtils::waitDuration(waitTime, unit), [&]() { return(this->m_count == m_parties || this->m_broken == true); });
 
 	// We have come here means the condition variable has been signalled and condition met. Let us check various possibilities here.
-	if(isBroken())
+	if(m_broken)
 		throw BrokenBarrierException();
 
 	if(timeOutNeeded && this->m_count != m_parties)
