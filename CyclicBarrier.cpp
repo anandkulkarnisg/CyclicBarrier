@@ -68,7 +68,6 @@ void CyclicBarrier::resetGeneration()
 void CyclicBarrier::nextGeneration()
 {	
 	m_count = m_parties;
-	m_cond.notify_all();
 	resetGeneration();
 }
 
@@ -77,7 +76,6 @@ void CyclicBarrier::breakBarrier()
 {
 	m_broken = true;
 	m_count = m_parties;
-	m_cond.notify_all();
 } 
 
 // Now Implement the most critical method. Internal private dowait. It covers both the await and await with timeout interface calls. 
@@ -103,12 +101,17 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 			runStatus = true;
 			nextGeneration();
 			exclusiveLock.unlock();
+			m_cond.notify_all();
 			return(0);
 		}
 		catch(const std::exception& e)
 		{
 			if(!runStatus)
+			{
 				breakBarrier();
+				exclusiveLock.unlock();
+				m_cond.notify_all();
+			}
 		}
 	}	
 
