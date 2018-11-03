@@ -128,7 +128,10 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 
 	if(timeOutNeeded && this->m_count != m_parties)
 	{
+		// After breaking barrier we need to unlock first and notify other waiting threads to terminate/exit.
 		breakBarrier();
+		exclusiveLock.unlock();
+		m_cond.notify_all();
 		throw TimeOutException();
 	}
 
