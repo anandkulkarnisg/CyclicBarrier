@@ -30,6 +30,10 @@ class CyclicBarrier
 	public:
 		CyclicBarrier(const unsigned int&);		// Public Interface of constructor.
 		CyclicBarrier(const unsigned int&, Poco::Runnable* runItem);	// Constructor with parameters and runnable item.
+		CyclicBarrier(const CyclicBarrier&)=delete;
+		CyclicBarrier& operator=(const CyclicBarrier&)=delete;
+		CyclicBarrier(CyclicBarrier&&)=delete;
+		CyclicBarrier& operator=(CyclicBarrier&&)=delete;
 		unsigned int getParties();				// This returns the number of parties required to trip this barrier.
 		unsigned int await();					// This is await feature with blocking until either broken or successfull.
 		unsigned int await(const long&, const TimeUnit& = TimeUnit::MilliSeconds);		// Ths is  await with time out feature. It either returns suceessfull or breaks the barrier upon timeout.
