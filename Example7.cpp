@@ -15,7 +15,7 @@ CyclicBarrier preBarrier(2), postBarrier(2);
 void computeDotProduct(const vector<int>& v, const int& threadId)
 {
 	size_t size=v.size();
-	int startCounter=0;
+	size_t startCounter=0;
 	while(startCounter<v.size())
 	{
 		int val=v[startCounter];
