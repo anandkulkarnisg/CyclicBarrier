@@ -15,14 +15,14 @@ void computeDotProduct(const vector<int>& v, const int& threadId, long& result, 
   while(startCounter<size)
   {
     int val=v[startCounter];
-    preBarrier.await();
+    preBarrier.await();   // both threads sync here first before computation happens.
     if(threadId)
       get<0>(var)=val;
     else
       get<1>(var)=val;
-    postBarrier.await();
+    postBarrier.await();  // both threads sync here after computation happens.
     if(!threadId)
-      result+=get<0>(var)*get<1>(var);
+      result+=get<0>(var)*get<1>(var);  // only the thread 0 does the computation of dot product.
     ++startCounter;
   }
 }
@@ -31,7 +31,7 @@ long getDotProduct(const vector<int>& v1, const vector<int>& v2)
 {
   long result=0;
   tuple<int, int> var=make_tuple(0, 0);
-  short barrierPair=2; // We need a pair of barriers [ i.e two of them ].
+  constexpr short barrierPair=2; // We need a pair of barriers [ i.e two of them ].
   CyclicBarrier preBarrier(barrierPair), postBarrier(barrierPair);
   thread t1(&computeDotProduct, cref(v1), 0, ref(result), ref(var), ref(preBarrier), ref(postBarrier));
   thread t2(&computeDotProduct, cref(v2), 1, ref(result), ref(var), ref(preBarrier), ref(postBarrier));
