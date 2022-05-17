@@ -18,9 +18,9 @@ void threadFunc(const bool& waitMode)
 		{	
 			localBarrierCount = barrier.await(1000, TimeUnit::MicroSeconds);	// On the edge of 1000 micro seconds the barrier either can go broke waiting or work perfectly. This is the tolerence edge!!
 		}
-		catch(const std::exception& e)
+		catch(const exception& e)
 		{
-			std::cout << localBarrierCount << e.what() << std::endl;
+			cout << localBarrierCount << e.what() << endl;
 		}
 	}
 	else
@@ -29,9 +29,9 @@ void threadFunc(const bool& waitMode)
 		{
 			localBarrierCount = barrier.await();
 		}
-		catch(const std::exception& e)
+		catch(const exception& e)
 		{
-			std::cout << localBarrierCount << e.what() << std::endl;
+			cout << localBarrierCount << e.what() << endl;
 		}
 	}
 }
@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
 	int i=0;
 	while(i<10000)
 	{
-		std::thread t1(&threadFunc, false);
-		std::thread t2(&threadFunc, true);
+		thread t1(&threadFunc, false);
+		thread t2(&threadFunc, true);
 		t1.join();
 		t2.join();
 		++i;

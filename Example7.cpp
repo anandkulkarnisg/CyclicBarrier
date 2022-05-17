@@ -47,8 +47,8 @@ long getDotProduct(const vector<int>& v1, const vector<int>& v2)
 
 int main(int argc, char* argv[])
 {
-  vector<int> v1={0, 1, 2, 1, 0, 2, 5, 2, 1, 5, 2, 1, 0, 0, 0, 1};
-  vector<int> v2={1, 0, 5, 0, 1, 1, 0, 0, 0, 2, 0, 0, 0, 1, 1, 1};
+  vector<int> v1={0, 1, 2, 1, 0, 2, 5, 2, 1, 5, 2, 1, 0, 0, 0, 1, 2};
+  vector<int> v2={1, 0, 5, 0, 1, 1, 0, 0, 0, 2, 0, 0, 0, 1, 1, 1, 3};
   long dotProduct=getDotProduct(v1, v2);
   cout << "dot product = " << dotProduct << endl;
   return(0);

@@ -105,7 +105,7 @@ unsigned int CyclicBarrier::dowait(const bool& timeOutNeeded, const long& waitTi
 			m_cond.notify_all();
 			return(0);
 		}
-		catch(const std::exception& e)
+		catch(const exception& e)
 		{
 			if(!runStatus)
 			{
