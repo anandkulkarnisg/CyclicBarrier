@@ -28,8 +28,8 @@ class CyclicBarrier
 		bool m_isRunnableItem = false;			// This is set to indicate if the runnable is passed to the Barrier.
 
 	public:
-		CyclicBarrier(const unsigned int&);		// Public Interface of constructor.
-		CyclicBarrier(const unsigned int&, Poco::Runnable* runItem);	// Constructor with parameters and runnable item.
+		CyclicBarrier(const long&);		// Public Interface of constructor.
+		CyclicBarrier(const long&, Poco::Runnable* runItem);	// Constructor with parameters and runnable item.
 		CyclicBarrier(const CyclicBarrier&)=delete;
 		CyclicBarrier& operator=(const CyclicBarrier&)=delete;
 		CyclicBarrier(CyclicBarrier&&)=delete;

@@ -7,18 +7,18 @@ using namespace std;
 using namespace Poco;
 
 // First implement the constructor with default parameter of participants. Here there is no Runnable being run.
-CyclicBarrier::CyclicBarrier(const unsigned int& participantCount)
+CyclicBarrier::CyclicBarrier(const long& participantCount)
 {
-  if(participantCount <= 0)
+  if(participantCount<=0)
     throw IllegalArgumentException();
   m_parties = participantCount;
   m_count = participantCount;
 }
 
 // Implement the constructor with participant count and Runnable item. Here the runnable is present and initialized.
-CyclicBarrier::CyclicBarrier(const unsigned int& participantCount, Runnable* runItem)
+CyclicBarrier::CyclicBarrier(const long& participantCount, Runnable* runItem)
 {
-  if(participantCount <= 0)
+  if(participantCount<=0)
     throw IllegalArgumentException();
   m_parties = participantCount;
   m_count = participantCount;
